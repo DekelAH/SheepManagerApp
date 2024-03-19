@@ -12,6 +12,7 @@ namespace Assets.Scripts.Infrastructure.Network
     {
         #region Consts
 
+        // To Scriptable object
         private const string HERD_SERVER_ADDRESS = "https://localhost:7035/api/herds/";
         private const string SHEEP_SERVER_ADDRESS = "https://localhost:7035/api/sheeps/";
 
@@ -32,6 +33,30 @@ namespace Assets.Scripts.Infrastructure.Network
         public static async UniTask<SheepResponse> EditSheep(SheepUpdateRequest sheepUpdateRequest)
         {
             return await EditSheepWebRequest(sheepUpdateRequest);
+        }
+
+        public static async UniTask<HerdResponse> UpdateHerd(HerdResponse herdToUpdate)
+        {
+            return await UpdateHerdRequest(herdToUpdate);
+        }
+
+        private static async UniTask<HerdResponse> UpdateHerdRequest(HerdResponse herdToUpdate)
+        {
+            var json = JsonUtility.ToJson(herdToUpdate);
+            using (var request = UnityWebRequest.Put(HERD_SERVER_ADDRESS + $"{herdToUpdate.herdId}", json))
+            {
+                request.SetRequestHeader("Content-Type", "application/json");
+                var response = await request.SendWebRequest();
+                if (!string.IsNullOrEmpty(response.error))
+                {
+                    throw new Exception("Error accured while sending UpdateHerd put request.");
+                }
+
+                var responseJson = response.downloadHandler.text;
+                HerdResponse herdResponse = JsonUtility.FromJson<HerdResponse>(responseJson);
+
+                return herdResponse;
+            }
         }
 
         private static async UniTask<SheepResponse> EditSheepWebRequest(SheepUpdateRequest sheepUpdateRequest)

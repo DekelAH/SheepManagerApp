@@ -72,8 +72,7 @@ namespace Assets.Scripts.Models
         }
 
         public void SetHerdMatches(List<MatchResponse> matches)
-        {
-            
+        {          
             _matches = matches;
         }
 
@@ -82,18 +81,36 @@ namespace Assets.Scripts.Models
             _sheeps = sheeps;
         }
 
-        public void AddSheepToHerd(SheepResponse sheepResponse)
+        public void AddSheepToHerd(SheepAddRequest sheepAddRequest)
         {
-            if (sheepResponse == null)
+            if (sheepAddRequest == null)
             {
                 return;
             }
 
-            _sheeps.Add(sheepResponse);
+            SheepResponse newSheep = new()
+            {
+                sheepId = Guid.NewGuid().ToString(),
+                tagNumber = sheepAddRequest.tagNumber,
+                herdId = sheepAddRequest.herdId,
+                weight = sheepAddRequest.weight,
+                gender = sheepAddRequest.gender,
+                race = sheepAddRequest.race,
+                bloodType = sheepAddRequest.bloodType,
+                selection = sheepAddRequest.selection,
+                birthdate = sheepAddRequest.birthdate,
+                motherTagNumber = sheepAddRequest.motherTagNumber,
+                fatherTagNumber = sheepAddRequest.fatherTagNumber,
+                isDead = sheepAddRequest.isDead,
+                isSold = sheepAddRequest.isSold,
+                isPregnant = sheepAddRequest.isPregnant
+            };
+
+            _sheeps.Add(newSheep);
             DataChange?.Invoke();
         }
 
-        public void UpdateSheep(SheepResponse sheepToUpdate)
+        public void UpdateSheep(SheepUpdateRequest sheepToUpdate)
         {
             var updatedSheep = _sheeps.FirstOrDefault(s => s.sheepId == sheepToUpdate.sheepId);
             updatedSheep.sheepId = sheepToUpdate.sheepId;

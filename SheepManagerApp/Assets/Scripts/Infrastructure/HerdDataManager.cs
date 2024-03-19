@@ -83,18 +83,29 @@ namespace Assets.Scripts.Infrastructure
                     break;
             }
         }
-
-        public static async void EditSheep(SheepUpdateRequest sheepAddRequest)
+        public static async UniTask UpdateHerdToServer()
         {
-            var sheepResponse = await NetworkManager.EditSheep(sheepAddRequest);
-            HerdDataProvider.Instance.Get.UpdateSheep(sheepResponse);
+            var herd = HerdDataProvider.Instance.Get;
+            HerdResponse herdResponse = new()
+            {
+                herdId = herd.HerdId,
+                herdSheeps = herd.Sheeps,
+                matches = herd.Matches
+            };
+
+            await NetworkManager.UpdateHerd(herdResponse);
+            // check returned object and even it with the existing one.
         }
 
-        public static async void AddSheep(SheepAddRequest addRequest)
+        public static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
         {
-            addRequest.herdId = _herdId;
-            var sheepResponse = await NetworkManager.AddSheep(addRequest);
-            HerdDataProvider.Instance.Get.AddSheepToHerd(sheepResponse);
+            HerdDataProvider.Instance.Get.UpdateSheep(sheepUpdateRequest);
+        }
+
+        public static void AddSheep(SheepAddRequest sheepAddRequest)
+        {
+            sheepAddRequest.herdId = _herdId;
+            HerdDataProvider.Instance.Get.AddSheepToHerd(sheepAddRequest);
         }
 
         public static void SetCurrentSheepDataView(int currentSheepDataViewTagNumber)
