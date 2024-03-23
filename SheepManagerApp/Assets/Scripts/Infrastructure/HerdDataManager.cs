@@ -83,6 +83,7 @@ namespace Assets.Scripts.Infrastructure
                     break;
             }
         }
+
         public static async UniTask UpdateHerdToServer()
         {
             var herd = HerdDataProvider.Instance.Get;
@@ -90,14 +91,13 @@ namespace Assets.Scripts.Infrastructure
             {
                 herdId = herd.HerdId,
                 herdSheeps = herd.Sheeps,
-                matches = herd.Matches
+                matches = herd.Matches,
+                herdName = string.Empty
             };
-
             await NetworkManager.UpdateHerd(herdResponse);
-            // check returned object and even it with the existing one.
         }
 
-        public static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
+        public async static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
         {
             HerdDataProvider.Instance.Get.UpdateSheep(sheepUpdateRequest);
         }

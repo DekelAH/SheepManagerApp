@@ -1,6 +1,7 @@
-﻿using Assets.Scripts.Models;
+﻿
+
+using Assets.Scripts.Models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Assets.Scripts.DTO
 {
