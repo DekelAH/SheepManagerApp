@@ -18,7 +18,7 @@ MonoBehaviour:
   - sheepId: 457458ce-39af-45ab-957d-0dce791f0401
     tagNumber: 7
     herdId: c4ad98db-2b1d-4fd5-9427-1dcd4a01a581
-    weight: 54.4
+    weight: 54.1
     gender: Male
     race: Afek
     bloodType: BB
@@ -170,24 +170,24 @@ MonoBehaviour:
     isSold: 0
     isPregnant: 0
   _matches:
-  - matchId: 84920c1a-6a0c-4f73-afab-0204bfaee543
-    maleTagNumber: 7
-    femaleTagNumber: 10
-  - matchId: 48242228-ac92-4ca8-8206-2fedfaed657d
-    maleTagNumber: 4
-    femaleTagNumber: 10
-  - matchId: 8d0d7522-7c63-4f7c-929d-806cf235f6db
-    maleTagNumber: 4
-    femaleTagNumber: 1
-  - matchId: 84b09b44-eae3-4d5c-ae10-92f7dfd03eed
-    maleTagNumber: 7
-    femaleTagNumber: 1
-  - matchId: 957264f7-fe41-4516-8e52-c8e9a6781fd3
+  - matchId: c159b20d-1921-4a79-a92d-cfb44ed6911a
     maleTagNumber: 7
     femaleTagNumber: 5
-  - matchId: 00a2e040-10b8-4076-b4cd-d522eef74483
-    maleTagNumber: 4
-    femaleTagNumber: 2
-  - matchId: e712d3b5-7618-4acd-9748-fbc98c444949
+  - matchId: 1eb308a2-ab4f-4e91-97d7-37ae9d2a6980
     maleTagNumber: 7
+    femaleTagNumber: 10
+  - matchId: 801bd7a0-9317-4335-9e02-c69b530025c0
+    maleTagNumber: 7
+    femaleTagNumber: 1
+  - matchId: 96f31a8f-585d-404b-a063-1799c3b92092
+    maleTagNumber: 7
+    femaleTagNumber: 2
+  - matchId: 9b5b7aac-e937-4026-82cc-10f67d3b1e30
+    maleTagNumber: 4
+    femaleTagNumber: 10
+  - matchId: a980f4a0-f084-4207-b4b1-8f1d772a590c
+    maleTagNumber: 4
+    femaleTagNumber: 1
+  - matchId: ddb76439-8ac3-4d2b-adbe-5fa90c784be1
+    maleTagNumber: 4
     femaleTagNumber: 2

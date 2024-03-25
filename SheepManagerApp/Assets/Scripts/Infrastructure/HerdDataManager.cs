@@ -1,9 +1,12 @@
 ﻿using Assets.Scripts.DTO;
 using Assets.Scripts.Infrastructure.Network;
 using Assets.Scripts.Infrastructure.Providers;
+using Assets.Scripts.Matches;
 using Assets.Scripts.StorageSystem;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure
@@ -30,8 +33,8 @@ namespace Assets.Scripts.Infrastructure
         {
             _instance = new HerdDataManager();
             Debug.Log("<----- HerdDataManager Created ----->");
-            LoadHerdData();
             await SetHerdModel();
+            LoadHerdData();
 
             SubsribeToEvents();
         }
@@ -44,8 +47,12 @@ namespace Assets.Scripts.Infrastructure
         private static async UniTask SetHerdModel()
         {
             var herdModel = await NetworkManager.GetHerd(Guid.Parse(_herdId));
+            var allMales = await GetMaleSheeps(herdModel.herdSheeps);
+            var allFemales = await GetFemaleSheeps(herdModel.herdSheeps);
+
             HerdDataProvider.Instance.Get.InitializeHerdData(herdModel.herdId, herdModel.herdName,
-                                                             herdModel.herdSheeps, herdModel.matches);
+                                                             herdModel.herdSheeps, await SetMatches(allMales, allFemales));
+
             SaveHerdData();
         }
 
@@ -84,20 +91,39 @@ namespace Assets.Scripts.Infrastructure
             }
         }
 
+        private static async UniTask<List<MatchResponse>> SetMatches(List<SheepResponse> allMales, List<SheepResponse> allFemales)
+        {
+            return await MatchesCreator.CreateMatches(allMales, allFemales);
+        }
+
+        private static UniTask<List<SheepResponse>> GetMaleSheeps(List<SheepResponse> allSheeps)
+        {
+            var maleSheeps = allSheeps.Where(s => s.gender == "Male").ToList();
+            return UniTask.FromResult(maleSheeps);
+        }
+
+        private static UniTask<List<SheepResponse>> GetFemaleSheeps(List<SheepResponse> allSheeps)
+        {
+            var femaleSheeps = allSheeps.Where(s => s.gender == "Female").ToList();
+            return UniTask.FromResult(femaleSheeps);
+        }
+
         public static async UniTask UpdateHerdToServer()
         {
             var herd = HerdDataProvider.Instance.Get;
             HerdResponse herdResponse = new()
             {
                 herdId = herd.HerdId,
+                herdName = string.Empty,
+
                 herdSheeps = herd.Sheeps,
-                matches = herd.Matches,
-                herdName = string.Empty
+                matches = herd.Matches
             };
+
             await NetworkManager.UpdateHerd(herdResponse);
         }
 
-        public async static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
+        public static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
         {
             HerdDataProvider.Instance.Get.UpdateSheep(sheepUpdateRequest);
         }

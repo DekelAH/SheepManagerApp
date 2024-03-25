@@ -23,5 +23,30 @@ namespace Assets.Scripts.DTO
         public bool isPregnant;
 
         #endregion
+
+        #region Methods
+
+        public double GetAge()
+        {
+            var sheepBirthdate = DateTime.Parse(birthdate);
+            DateTime today = DateTime.Today;
+            int years = today.Year - sheepBirthdate.Year;
+            DateTime last = sheepBirthdate.AddYears(years);
+
+            if (last > today)
+            {
+                last = last.AddYears(-1);
+                years--;
+            }
+
+            DateTime next = last.AddYears(1);
+            double yearDays = (next - last).Days;
+            double days = (today - last).Days;
+            double exactAge = (double)years + (days / yearDays);
+
+            return exactAge;
+        }
+
+        #endregion
     }
 }

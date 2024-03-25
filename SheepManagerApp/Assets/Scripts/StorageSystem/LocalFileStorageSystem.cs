@@ -32,7 +32,7 @@ namespace Assets.Scripts.StorageSystem
         protected override void SaveInternal()
         {
             string json = JsonUtility.ToJson(HerdDataProvider.Instance.Get);
-            File.WriteAllText(Application.persistentDataPath + "/save.txt", json);
+            File.WriteAllText(Application.dataPath + "/save.txt", json);
 
             Debug.Log("<--- Saved In Local JSON File --->");
         }
