@@ -31,12 +31,6 @@ namespace Assets.Scripts.Models
 
         #endregion
 
-        #region Fields
-
-        private string _herdModelSaveName;
-
-        #endregion
-
         #region Methods
 
         public void InitializeHerdData(string herdId, string herdName, List<SheepResponse> sheeps, List<MatchResponse> matches)
@@ -64,11 +58,6 @@ namespace Assets.Scripts.Models
                 return; 
             }
             _herdName = herdName;
-        }
-
-        public void SetModelSaveType(string saveTypeName)
-        {
-            _herdModelSaveName = saveTypeName;
         }
 
         public void SetHerdMatches(List<MatchResponse> matches)
@@ -139,7 +128,6 @@ namespace Assets.Scripts.Models
         public string HerdName => _herdName;
         public List<SheepResponse> Sheeps => _sheeps;
         public List<MatchResponse> Matches => _matches;
-        public string HerdModelSaveName => _herdModelSaveName;
 
         #endregion
     }

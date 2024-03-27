@@ -35,7 +35,7 @@ namespace Assets.Scripts.SheepDataBtns
 
         public void OnClickButton()
         {
-            HerdDataManager.SetCurrentSheepDataView(_tagNumber);
+            ApplicationDataManager.SetCurrentSheepDataView(_tagNumber);
             SectionHandler.LoadSection(SceneNameProvider.GetSheepDataScreenName);
         }
 

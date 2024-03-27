@@ -74,15 +74,15 @@ public class SheepDataView : MonoBehaviour
 
     private async void SetSheep()
     {
-        var tagNumber = HerdDataManager.CurrentSheepDataViewTagNumber;
+        var tagNumber = ApplicationDataManager.CurrentSheepDataViewTagNumber;
         _sheep = await GetSheepByTag(tagNumber);
         _tagNumber.text = tagNumber.ToString();
     }
 
     private UniTask<SheepResponse> GetSheepByTag(int tagNumber)
     {
-        var herdId = HerdDataManager.HerdId;
-        var sheep = HerdDataProvider.Instance.Get.Sheeps.FirstOrDefault(s => s.tagNumber == tagNumber);
+        var herdId = ApplicationDataManager.HerdId;
+        var sheep = UserDataProvider.Instance.Get.HerdModel.Sheeps.FirstOrDefault(s => s.tagNumber == tagNumber);
         return UniTask.FromResult(sheep);
     }
 

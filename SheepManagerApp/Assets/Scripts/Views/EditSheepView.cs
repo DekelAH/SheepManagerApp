@@ -64,7 +64,7 @@ public class EditSheepView : MonoBehaviour
     public void OnSubmitBtnClick()
     {
         var sheepUpdateRequest = SetSheepUpdateRequest();
-        HerdDataManager.EditSheep(sheepUpdateRequest);
+        ApplicationDataManager.EditSheep(sheepUpdateRequest);
         SectionHandler.LoadSection(SceneNameProvider.GetHerdScreenName);
     }
 
@@ -75,8 +75,8 @@ public class EditSheepView : MonoBehaviour
 
     private void SetSheepFields()
     {
-        var sheepToDisplay = HerdDataManager.Herd.herdSheeps.FirstOrDefault(s => s.tagNumber ==
-                                                                             HerdDataManager.CurrentSheepDataViewTagNumber);
+        var sheepToDisplay = ApplicationDataManager.Herd.herdSheeps.FirstOrDefault(s => s.tagNumber ==
+                                                                             ApplicationDataManager.CurrentSheepDataViewTagNumber);
         _sheepId = sheepToDisplay.sheepId;
         _herdId = sheepToDisplay.herdId;
         _tagNumberText.text = "#" + sheepToDisplay.tagNumber.ToString();

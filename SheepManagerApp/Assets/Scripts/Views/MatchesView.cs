@@ -25,7 +25,7 @@ public class MatchesView : MonoBehaviour
 
     private List<MatchResponse> GetMatches()
     {
-        var matches = HerdDataManager.Herd.matches;
+        var matches = ApplicationDataManager.Herd.matches;
         return matches;
     }
 

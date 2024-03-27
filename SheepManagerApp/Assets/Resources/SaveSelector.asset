@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec2cf2832ac8264e800cbf5e9800b6a, type: 3}
   m_Name: SaveSelector
   m_EditorClassIdentifier: 
-  _herdModel: {fileID: 11400000, guid: 715b16bb3ce9796448064e8bb195f896, type: 2}
+  _userModel: {fileID: 11400000, guid: 1474d6b9530aa96458eb1ae6cf7e60a4, type: 2}
   _saveType: 0

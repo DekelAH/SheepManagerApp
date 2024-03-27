@@ -51,7 +51,7 @@ public class AddSheepView : MonoBehaviour
     public void OnSubmitBtnClick()
     {
         var sheepAddRequest = SetSheepAddRequest();
-        HerdDataManager.AddSheep(sheepAddRequest);
+        ApplicationDataManager.AddSheep(sheepAddRequest);
         SectionHandler.LoadSection(SceneNameProvider.GetHerdScreenName);
     }
 

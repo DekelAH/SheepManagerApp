@@ -16,7 +16,7 @@ namespace Assets.Scripts.Models
         #region Editor
 
         [SerializeField]
-        private HerdModel _herdModel;
+        private UserModel _userModel;
 
         [SerializeField]
         private SaveTypes _saveType;
@@ -25,16 +25,16 @@ namespace Assets.Scripts.Models
 
         #region Methods
 
-        private HerdModel SaveTypeSelector()
+        private UserModel SaveTypeSelector()
         {
             switch (_saveType)
             {
                 case SaveTypes.LocalFile:
-                    _herdModel.SetModelSaveType(LOCAL_FILE);
-                    return _herdModel;
+                    _userModel.SetModelSaveType(LOCAL_FILE);
+                    return _userModel;
                 case SaveTypes.PlayerPrefs:
-                    _herdModel.SetModelSaveType(PLAYER_PREFS);
-                    return _herdModel;
+                    _userModel.SetModelSaveType(PLAYER_PREFS);
+                    return _userModel;
                 default:
                     return null;
             }
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Models
 
         #region Properties
 
-        public HerdModel GetSaveType => SaveTypeSelector();
+        public UserModel GetSaveType => SaveTypeSelector();
 
         #endregion
     }

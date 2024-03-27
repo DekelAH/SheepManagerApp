@@ -29,7 +29,7 @@ namespace Assets.Scripts.HerdData
 
         private void Start()
         {
-            CreateBtns(HerdDataManager.Herd.herdSheeps);
+            CreateBtns(ApplicationDataManager.Herd.herdSheeps);
         }
 
         public void OnCloseBtnClick()

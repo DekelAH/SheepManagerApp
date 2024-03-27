@@ -11,11 +11,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure
 {
-    public class HerdDataManager
+    public class ApplicationDataManager
     {
         #region Fields
 
-        private static HerdDataManager _instance;
+        private static ApplicationDataManager _instance;
 
         private static readonly string _herdId = "c4ad98db-2b1d-4fd5-9427-1dcd4a01a581";
 
@@ -31,17 +31,17 @@ namespace Assets.Scripts.Infrastructure
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private async static void CreateInstance()
         {
-            _instance = new HerdDataManager();
+            _instance = new ApplicationDataManager();
             Debug.Log("<----- HerdDataManager Created ----->");
-            await SetHerdModel();
-            LoadHerdData();
+            //await SetHerdModel();
+            //LoadHerdData();
 
-            SubsribeToEvents();
+            //SubsribeToEvents();
         }
 
         private static void SubsribeToEvents()
         {
-            HerdDataProvider.Instance.Get.DataChange += OnDataBalanceChange;
+            UserDataProvider.Instance.Get.HerdModel.DataChange += OnDataBalanceChange;
         }
 
         private static async UniTask SetHerdModel()
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Infrastructure
             var allMales = await GetMaleSheeps(herdModel.herdSheeps);
             var allFemales = await GetFemaleSheeps(herdModel.herdSheeps);
 
-            HerdDataProvider.Instance.Get.InitializeHerdData(herdModel.herdId, herdModel.herdName,
+            UserDataProvider.Instance.Get.HerdModel.InitializeHerdData(herdModel.herdId, herdModel.herdName,
                                                              herdModel.herdSheeps, await SetMatches(allMales, allFemales));
 
             SaveHerdData();
@@ -63,7 +63,7 @@ namespace Assets.Scripts.Infrastructure
 
         private static void SaveHerdData()
         {
-            switch (HerdDataProvider.Instance.Get.HerdModelSaveName)
+            switch (UserDataProvider.Instance.Get.ModelSaveName)
             {
                 case "Local File":
                     _localFileStorageSystem.Save();
@@ -78,7 +78,7 @@ namespace Assets.Scripts.Infrastructure
 
         private static void LoadHerdData()
         {
-            switch (HerdDataProvider.Instance.Get.HerdModelSaveName)
+            switch (UserDataProvider.Instance.Get.ModelSaveName)
             {
                 case "Local File":
                     _localFileStorageSystem.Load();
@@ -108,14 +108,23 @@ namespace Assets.Scripts.Infrastructure
             return UniTask.FromResult(femaleSheeps);
         }
 
+        public async UniTask RegisterUser(RegisterRequest registerRequest)
+        {
+            var registerResponse = await NetworkManager.CreateUser(registerRequest);
+            if (registerResponse is not null)
+            {
+                UserDataProvider.Instance.Get.InitializeUserData(registerResponse.userId, registerResponse.personName,
+                                                             registerResponse.email, registerResponse.herdId);
+            }      
+        }
+
         public static async UniTask UpdateHerdToServer()
         {
-            var herd = HerdDataProvider.Instance.Get;
+            var herd = UserDataProvider.Instance.Get.HerdModel;
             HerdResponse herdResponse = new()
             {
                 herdId = herd.HerdId,
                 herdName = string.Empty,
-
                 herdSheeps = herd.Sheeps,
                 matches = herd.Matches
             };
@@ -125,13 +134,13 @@ namespace Assets.Scripts.Infrastructure
 
         public static void EditSheep(SheepUpdateRequest sheepUpdateRequest)
         {
-            HerdDataProvider.Instance.Get.UpdateSheep(sheepUpdateRequest);
+            UserDataProvider.Instance.Get.HerdModel.UpdateSheep(sheepUpdateRequest);
         }
 
         public static void AddSheep(SheepAddRequest sheepAddRequest)
         {
             sheepAddRequest.herdId = _herdId;
-            HerdDataProvider.Instance.Get.AddSheepToHerd(sheepAddRequest);
+            UserDataProvider.Instance.Get.HerdModel.AddSheepToHerd(sheepAddRequest);
         }
 
         public static void SetCurrentSheepDataView(int currentSheepDataViewTagNumber)
@@ -143,10 +152,10 @@ namespace Assets.Scripts.Infrastructure
 
         #region Properties
 
-        public static HerdDataManager Instance => _instance;
+        public static ApplicationDataManager Instance => _instance;
         public static int CurrentSheepDataViewTagNumber => _currentSheepDataViewTagNumber;
         public static string HerdId => _herdId;
-        public static HerdResponse Herd => HerdDataProvider.Instance.Get.ToHerdResponse();
+        public static HerdResponse Herd => UserDataProvider.Instance.Get.HerdModel.ToHerdResponse();
 
         #endregion
     }

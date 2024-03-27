@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure.Providers
 {
-    public class HerdDataProvider
+    public class UserDataProvider
     {
         #region Consts
 
@@ -13,14 +13,14 @@ namespace Assets.Scripts.Infrastructure.Providers
 
         #region Fields
 
-        private static HerdDataProvider _instance;
+        private static UserDataProvider _instance;
         private static SaveSelector _saveSelector;
 
         #endregion
 
         #region Constructor
 
-        private HerdDataProvider(string saveSelectorResourceName)
+        private UserDataProvider(string saveSelectorResourceName)
         {
             _saveSelector = Resources.Load<SaveSelector>(saveSelectorResourceName);
         }
@@ -29,17 +29,18 @@ namespace Assets.Scripts.Infrastructure.Providers
 
         #region Properties
 
-        public static HerdDataProvider Instance
+        public static UserDataProvider Instance
         {
             get
             {
-                _instance ??= new HerdDataProvider(SAVE_SELECTOR_RESOURCE_NAME);
+                _instance ??= new UserDataProvider(SAVE_SELECTOR_RESOURCE_NAME);
 
                 return _instance;
             }
         }
 
-        public HerdModel Get => _saveSelector.GetSaveType;
+        public UserModel Get => _saveSelector.GetSaveType;
+
         #endregion
     }
 }

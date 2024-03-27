@@ -13,12 +13,12 @@ namespace Assets.Scripts.StorageSystem
             if (File.Exists(Application.persistentDataPath + "/save.txt"))
             {
                 string json = File.ReadAllText(Application.dataPath + "/save.txt");
-                JsonUtility.FromJsonOverwrite(json, HerdDataProvider.Instance.Get);
-                HerdDataProvider.Instance.Get.InitializeHerdData(
-                    HerdDataProvider.Instance.Get.HerdId,
-                    HerdDataProvider.Instance.Get.HerdName,
-                    HerdDataProvider.Instance.Get.Sheeps,
-                    HerdDataProvider.Instance.Get.Matches
+                JsonUtility.FromJsonOverwrite(json, UserDataProvider.Instance.Get);
+                UserDataProvider.Instance.Get.HerdModel.InitializeHerdData(
+                    UserDataProvider.Instance.Get.HerdModel.HerdId,
+                    UserDataProvider.Instance.Get.HerdModel.HerdName,
+                    UserDataProvider.Instance.Get.HerdModel.Sheeps,
+                    UserDataProvider.Instance.Get.HerdModel.Matches
                     );
 
                 Debug.Log("<--- Loaded From Local JSON File --->");
@@ -31,7 +31,7 @@ namespace Assets.Scripts.StorageSystem
 
         protected override void SaveInternal()
         {
-            string json = JsonUtility.ToJson(HerdDataProvider.Instance.Get);
+            string json = JsonUtility.ToJson(UserDataProvider.Instance.Get);
             File.WriteAllText(Application.dataPath + "/save.txt", json);
 
             Debug.Log("<--- Saved In Local JSON File --->");
