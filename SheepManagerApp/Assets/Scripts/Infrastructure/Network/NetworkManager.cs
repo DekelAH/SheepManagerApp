@@ -43,6 +43,30 @@ namespace Assets.Scripts.Infrastructure.Network
             }
         }
 
+        public static async UniTask<LoginResponse> Login(LoginRequest loginRequest)
+        {
+            return await LoginWebRequest(loginRequest);
+        }
+
+        private static async UniTask<LoginResponse> LoginWebRequest(LoginRequest loginRequest)
+        {
+            var json = JsonUtility.ToJson(loginRequest);
+            using (var request = UnityWebRequest.Post(LOGIN_SERVER_ADDRESS, json, "application/json"))
+            {
+                request.SetRequestHeader("Content-Type", "application/json");
+                var response = await request.SendWebRequest();
+                if (!string.IsNullOrEmpty(response.error))
+                {
+                    throw new Exception("Error accured while sending Login post request.");
+                }
+
+                var responseJson = response.downloadHandler.text;
+                LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(responseJson);
+
+                return loginResponse;
+            }
+        }
+
         #endregion
 
         #region HerdWebRequestsMethods
@@ -55,6 +79,30 @@ namespace Assets.Scripts.Infrastructure.Network
         public static async UniTask<HerdResponse> UpdateHerd(HerdResponse herdToUpdate)
         {
             return await UpdateHerdWebRequest(herdToUpdate);
+        }
+
+        public static async UniTask<HerdResponse> CreateHerd(HerdAddRequest newHerd)
+        {
+            return await CreateHerdWebRequest(newHerd);
+        }
+
+        private static async UniTask<HerdResponse> CreateHerdWebRequest(HerdAddRequest newHerd)
+        {
+            var json = JsonUtility.ToJson(newHerd);
+            using (var request = UnityWebRequest.Post(HERD_SERVER_ADDRESS, json, "application/json"))
+            {
+                request.SetRequestHeader("Content-Type", "application/json");
+                var response = await request.SendWebRequest();
+                if (!string.IsNullOrEmpty(response.error))
+                {
+                    throw new Exception("Error accured while sending CreateHerd Post request.");
+                }
+
+                var responseJson = response.downloadHandler.text;
+                HerdResponse herdResponse = JsonUtility.FromJson<HerdResponse>(responseJson);
+
+                return herdResponse;
+            }
         }
 
         private static async UniTask<HerdResponse> UpdateHerdWebRequest(HerdResponse herdToUpdate)

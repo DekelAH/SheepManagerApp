@@ -48,9 +48,14 @@ namespace Assets.Scripts.Models
             _dataVersion = dataVersion;
         }
 
-        public void SetHerdModel(HerdModel herdModel)
+        public void SetHerdId(string herdId)
         {
-            _herdModel = herdModel;
+            _herdId = herdId;
+        }
+
+        public void IncrementDataVersion()
+        {
+            _dataVersion++;
         }
 
         public void SetModelSaveType(string saveTypeName)

@@ -1,5 +1,6 @@
 using Assets.Scripts.DTO;
 using Assets.Scripts.Infrastructure;
+using Assets.Scripts.Infrastructure.Managers;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -57,7 +58,17 @@ public class SignUpView : MonoBehaviour
             password = _password.text,
             confirmPassword = _confirmPassword.text
         };
-        await ApplicationDataManager.Instance.RegisterUser(registerRequest);
+
+        var isLoggedIn = await ApplicationDataManager.Instance.RegisterUser(registerRequest);
+        if (isLoggedIn)
+        {
+            UserSessionManager.Instance.SetIsUserLoggedIn(isLoggedIn);
+            SectionHandler.LoadSection("Create Herd");
+        }
+        else
+        {
+            Debug.Log("User is not logged in");
+        }
     }
 
     private void CheckSubmitBtnStatus()

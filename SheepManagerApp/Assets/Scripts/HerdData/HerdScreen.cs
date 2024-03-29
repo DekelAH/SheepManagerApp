@@ -45,10 +45,13 @@ namespace Assets.Scripts.HerdData
         private void CreateBtns(List<SheepResponse> sheepResponseList)
         {
             _sheepResponseList = sheepResponseList;
-            foreach (var sheepResponse in _sheepResponseList)
+            if (sheepResponseList is not null && sheepResponseList.Count > 0)
             {
-                _sheepDataButtonPrefabRef.SetTagNumberValue(sheepResponse.tagNumber);
-                Instantiate(_sheepDataButtonPrefabRef, _panelRectTransform);
+                foreach (var sheepResponse in _sheepResponseList)
+                {
+                    _sheepDataButtonPrefabRef.SetTagNumberValue(sheepResponse.tagNumber);
+                    Instantiate(_sheepDataButtonPrefabRef, _panelRectTransform);
+                }
             }
         }
 
