@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SheepDataView : MonoBehaviour
 {
@@ -38,13 +39,13 @@ public class SheepDataView : MonoBehaviour
     private TextMeshProUGUI _motherTagNumber;
 
     [SerializeField]
-    private TextMeshProUGUI _pregnant;
+    private Toggle _pregnantCheckMarkBtn;
 
     [SerializeField]
-    private TextMeshProUGUI _dead;
+    private Toggle _deadCheckMarkBtn;
 
     [SerializeField]
-    private TextMeshProUGUI _sold;
+    private Toggle _soldCheckMarkBtn;
 
     #endregion
 
@@ -72,6 +73,13 @@ public class SheepDataView : MonoBehaviour
         SectionHandler.LoadSection(SceneNameProvider.GetHerdScreenName);
     }
 
+    private void SetToggleOff()
+    {
+        _pregnantCheckMarkBtn.interactable = false;
+        _deadCheckMarkBtn.interactable = false;
+        _soldCheckMarkBtn.interactable = false;
+    }
+
     private async void SetSheep()
     {
         var tagNumber = ApplicationDataManager.CurrentSheepDataViewTagNumber;
@@ -88,6 +96,8 @@ public class SheepDataView : MonoBehaviour
 
     private void SetSheepDataFields()
     {
+        SetToggleOff();
+
         if (_sheep != null)
         {
             _tagNumber.text = " #" + _tagNumber.text;
@@ -99,9 +109,9 @@ public class SheepDataView : MonoBehaviour
             _birthDate.text = _sheep.birthdate;
             _fatherTagNumber.text = _sheep.fatherTagNumber.ToString();
             _motherTagNumber.text = _sheep.motherTagNumber.ToString();
-            _pregnant.text = _sheep.isPregnant.ToString();
-            _dead.text = _sheep.isDead.ToString();
-            _sold.text = _sheep.isSold.ToString();
+            _pregnantCheckMarkBtn.isOn = _sheep.isPregnant;
+            _deadCheckMarkBtn.isOn = _sheep.isDead;
+            _soldCheckMarkBtn.isOn = _sheep.isSold;
         }
     }
 

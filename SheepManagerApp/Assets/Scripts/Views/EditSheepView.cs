@@ -4,13 +4,14 @@ using Assets.Scripts.Infrastructure.Providers;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EditSheepView : MonoBehaviour
 {
     #region Editor
 
     [SerializeField]
-    private TMP_InputField _tagNumberText;
+    private TextMeshProUGUI _tagNumberText;
 
     [SerializeField]
     private TMP_InputField _weightText;
@@ -37,13 +38,13 @@ public class EditSheepView : MonoBehaviour
     private TMP_InputField _motherTagNumberText;
 
     [SerializeField]
-    private TMP_InputField _isPregnantText;
+    private Toggle _pregnantCheckMarkBtn;
 
     [SerializeField]
-    private TMP_InputField _isDeadText;
+    private Toggle _deadCheckMarkBtn;
 
     [SerializeField]
-    private TMP_InputField _isSoldText;
+    private Toggle _soldCheckMarkBtn;
 
     #endregion
 
@@ -51,6 +52,10 @@ public class EditSheepView : MonoBehaviour
 
     private string _sheepId;
     private string _herdId;
+
+    private bool _isDead;
+    private bool _isSold;
+    private bool _isPregnant;
 
     #endregion
 
@@ -73,13 +78,49 @@ public class EditSheepView : MonoBehaviour
         SectionHandler.LoadSection(SceneNameProvider.GetHerdScreenName);
     }
 
+    public void OnIsPregnantCheckMarkClick()
+    {
+        if (_pregnantCheckMarkBtn.isOn)
+        {
+            _isPregnant = true;
+        }
+        else
+        {
+            _isPregnant = false;
+        }
+    }
+
+    public void OnIsDeadCheckMarkClick()
+    {
+        if (_deadCheckMarkBtn.isOn)
+        {
+            _isDead = true;
+        }
+        else
+        {
+            _isDead = false;
+        }
+    }
+
+    public void OnIsSoldCheckMarkClick()
+    {
+        if (_soldCheckMarkBtn.isOn)
+        {
+            _isSold = true;
+        }
+        else
+        {
+            _isSold = false;
+        }
+    }
+
     private void SetSheepFields()
     {
         var sheepToDisplay = ApplicationDataManager.Herd.herdSheeps.FirstOrDefault(s => s.tagNumber ==
                                                                              ApplicationDataManager.CurrentSheepDataViewTagNumber);
         _sheepId = sheepToDisplay.sheepId;
         _herdId = sheepToDisplay.herdId;
-        _tagNumberText.text = "#" + sheepToDisplay.tagNumber.ToString();
+        _tagNumberText.text = sheepToDisplay.tagNumber.ToString();
         _weightText.text = sheepToDisplay.weight.ToString();
         _genderText.text = sheepToDisplay.gender;
         _bloodTypeText.text = sheepToDisplay.bloodType;
@@ -88,9 +129,9 @@ public class EditSheepView : MonoBehaviour
         _birthDateText.text = sheepToDisplay.birthdate.Trim();
         _fatherTagNumberText.text = sheepToDisplay.fatherTagNumber.ToString();
         _motherTagNumberText.text = sheepToDisplay.motherTagNumber.ToString();
-        _isPregnantText.text = sheepToDisplay.isPregnant.ToString();
-        _isDeadText.text = sheepToDisplay.isDead.ToString();
-        _isSoldText.text = sheepToDisplay.isSold.ToString();
+        _isPregnant = sheepToDisplay.isPregnant;
+        _isDead = sheepToDisplay.isDead;
+        _isSold = sheepToDisplay.isSold;
     }
 
     private SheepUpdateRequest SetSheepUpdateRequest()
@@ -99,7 +140,7 @@ public class EditSheepView : MonoBehaviour
         {
             sheepId = _sheepId.Trim(),
             herdId = _herdId.Trim(),
-            tagNumber = int.Parse(_tagNumberText.text.Remove(0,1)),
+            tagNumber = int.Parse(_tagNumberText.text),
             weight = double.Parse(_weightText.text),
             gender = _genderText.text.Trim(),
             race = _raceText.text.Trim(),
@@ -108,9 +149,9 @@ public class EditSheepView : MonoBehaviour
             birthdate = _birthDateText.text.Trim(),
             motherTagNumber = int.Parse(_motherTagNumberText.text),
             fatherTagNumber = int.Parse(_fatherTagNumberText.text),
-            isDead = bool.Parse(_isDeadText.text.Trim()),
-            isSold = bool.Parse(_isSoldText.text.Trim()),
-            isPregnant = bool.Parse(_isPregnantText.text.Trim())
+            isDead = _isDead,
+            isSold = _isSold,
+            isPregnant = _isPregnant
         };
     }
 

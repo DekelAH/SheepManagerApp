@@ -4,19 +4,33 @@
     {
         #region Methods
 
-        public void Save()
+        public void SaveHerd()
         {
-            SaveInternal();
+            SaveHerdInternal();
         }
 
-        protected abstract void SaveInternal();
+        protected abstract void SaveHerdInternal();
 
-        public void Load()
+        public void SaveUser()
         {
-            LoadInternal();
+            SaveUserInternal();
         }
 
-        protected abstract void LoadInternal();
+        protected abstract void SaveUserInternal();
+
+        public void LoadHerd()
+        {
+            LoadHerdInternal();
+        }
+
+        protected abstract void LoadHerdInternal();
+
+        public void LoadUser()
+        {
+            LoadUserInternal();
+        }
+
+        protected abstract void LoadUserInternal();
 
         #endregion
     }

@@ -13,6 +13,7 @@ namespace Assets.Scripts.DTO
         public string herdName;
         public List<SheepResponse> herdSheeps;
         public List<MatchResponse> matches;
+        public List<VaccineResponse> vaccines;
 
         #endregion
     }
@@ -26,7 +27,8 @@ namespace Assets.Scripts.DTO
                 herdId = herd.HerdId,
                 herdName = herd.HerdName,
                 herdSheeps = herd.Sheeps,
-                matches = herd.Matches
+                matches = herd.Matches,
+                vaccines = herd.Vaccines
             };
         }
     }

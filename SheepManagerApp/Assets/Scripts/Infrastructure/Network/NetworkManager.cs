@@ -14,6 +14,7 @@ namespace Assets.Scripts.Infrastructure.Network
         private const string HERD_SERVER_ADDRESS = "https://localhost:7035/api/herds/";
         private const string REGISTER_SERVER_ADDRESS = "https://localhost:7035/api/account/register";
         private const string LOGIN_SERVER_ADDRESS = "https://localhost:7035/api/account/login";
+        private const string LOGOUT_SERVER_ADDRESS = "https://localhost:7035/api/account/logout";
 
         #endregion
 
@@ -67,6 +68,27 @@ namespace Assets.Scripts.Infrastructure.Network
             }
         }
 
+        public static async UniTask<bool> Logout()
+        {
+            return await LogoutWebRequest();
+        }
+
+        private static async UniTask<bool> LogoutWebRequest()
+        {
+            using (var request = UnityWebRequest.Get(LOGOUT_SERVER_ADDRESS))
+            {
+                request.SetRequestHeader("Content-Type", "appolication/json");
+                var response = await request.SendWebRequest();
+                if (!string.IsNullOrEmpty(response.error))
+                {
+                    throw new Exception("Error accured while sending Logout get request.");
+                }
+
+                var isLoggedOut = bool.TryParse(response.downloadHandler.text, out bool result);
+                return isLoggedOut;
+            }
+        }
+
         #endregion
 
         #region HerdWebRequestsMethods
@@ -107,6 +129,7 @@ namespace Assets.Scripts.Infrastructure.Network
 
         private static async UniTask<HerdResponse> UpdateHerdWebRequest(HerdResponse herdToUpdate)
         {
+            herdToUpdate.matches = null;
             var json = JsonUtility.ToJson(herdToUpdate);
             using (var request = UnityWebRequest.Put(HERD_SERVER_ADDRESS + $"{herdToUpdate.herdId}", json))
             {

@@ -29,16 +29,21 @@ namespace Assets.Scripts.Models
         [SerializeField]
         private List<MatchResponse> _matches;
 
+        [SerializeField]
+        private List<VaccineResponse> _vaccines;
+
         #endregion
 
         #region Methods
 
-        public void InitializeHerdData(string herdId, string herdName, List<SheepResponse> sheeps, List<MatchResponse> matches)
+        public void InitializeHerdData(string herdId, string herdName, List<SheepResponse> sheeps,
+                                       List<MatchResponse> matches, List<VaccineResponse> vaccines)
         {
             _herdId = herdId; 
             _herdName = herdName;
             _sheeps = sheeps;
             _matches = matches;
+            _vaccines = vaccines;
         }
 
         public void SetHerdId(string herdId)
@@ -128,6 +133,7 @@ namespace Assets.Scripts.Models
         public string HerdName => _herdName;
         public List<SheepResponse> Sheeps => _sheeps;
         public List<MatchResponse> Matches => _matches;
+        public List<VaccineResponse> Vaccines => _vaccines;
 
         #endregion
     }

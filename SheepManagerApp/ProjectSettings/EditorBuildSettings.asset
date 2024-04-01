@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sheep Data.unity
     guid: 12027e60ec111f542a019459ce4b59bb
+  - enabled: 1
+    path: Assets/Scenes/Vaccines.unity
+    guid: 75bd6d9a384aac543aa0c0a48e3b9702
   m_configObjects: {}

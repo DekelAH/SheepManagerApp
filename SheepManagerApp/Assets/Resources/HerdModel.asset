@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b14867618319945af5f2745343004a, type: 3}
   m_Name: HerdModel
   m_EditorClassIdentifier: 
-  _herdId: b181ed4e-4c13-41a0-a7ad-81ee8d47fa51
-  _herdName: testim
+  _herdId: 0
+  _herdName: 0
   _sheeps: []
   _matches: []

@@ -15,6 +15,9 @@ namespace Assets.Scripts.Infrastructure.Managers
         [SerializeField]
         private bool _isUserLoggedIn;
 
+        [SerializeField]
+        private bool _isOfflineMod;
+
         #endregion
 
         #region Methods
@@ -34,17 +37,25 @@ namespace Assets.Scripts.Infrastructure.Managers
 
         public void TriggerOnlineConnectionTest()
         {
-            StartCoroutine(CheckInternetConnection(isConnected =>
+            StartCoroutine(CheckInternetConnection(async isConnected =>
             {
                 if (isConnected)
                 {
                     _hasInternetConnection = true;
+                    _isOfflineMod = false;
                     Debug.Log("Internet Available!");
                 }
                 else
                 {
-                    _hasInternetConnection= false;
-                    Debug.Log("Internet Not Available");
+                    _hasInternetConnection = false;
+                    _isOfflineMod = true;
+                    if (await ApplicationDataManager.LogoutRequestToServer())
+                    {
+                        SetIsUserLoggedIn(false);
+                    }
+                    
+                    Debug.Log("Internet Connection is Not Available");
+                    Debug.Log("User is Logged-out");
                 }
             }));
         }
@@ -74,6 +85,7 @@ namespace Assets.Scripts.Infrastructure.Managers
         public static UserSessionManager Instance { get; private set; }
         public bool HasInternetConnection => _hasInternetConnection;
         public bool IsUserLoggedIn => _isUserLoggedIn;
+        public bool IsOffileMod => _isOfflineMod;
 
         #endregion
     }

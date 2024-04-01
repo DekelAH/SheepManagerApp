@@ -41,6 +41,11 @@ public class LoginView : MonoBehaviour
         CheckSubmitBtnStatus();
     }
 
+    public void OnSubmitBtnClick()
+    {
+        SetLoginRequest();
+    }
+
     private async void SetLoginRequest()
     {
         LoginRequest loginRequest = new()
@@ -71,11 +76,6 @@ public class LoginView : MonoBehaviour
         {
             _submitBtn.enabled = false;
         }
-    }
-
-    public void OnSubmitBtnClick()
-    {
-        SetLoginRequest();
     }
 
     public void IsEmailValid()

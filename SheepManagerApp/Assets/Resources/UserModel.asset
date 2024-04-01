@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19566d13734f7c649ae59bf667cf4062, type: 3}
   m_Name: UserModel
   m_EditorClassIdentifier: 
-  _userId: fb65634c-da2e-4310-dfdb-08dc4ff8d05d
-  _personName: testy
-  _email: test@gmail.com
-  _herdId: b181ed4e-4c13-41a0-a7ad-81ee8d47fa51
+  _userId: 0
+  _personName: 0
+  _email: 0
+  _herdId: 
   _dataVersion: 0
   _herdModel: {fileID: 11400000, guid: 715b16bb3ce9796448064e8bb195f896, type: 2}

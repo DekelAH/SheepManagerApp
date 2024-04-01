@@ -8,7 +8,6 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure
@@ -33,7 +32,6 @@ namespace Assets.Scripts.Infrastructure
         {
             _instance = new ApplicationDataManager();
             Debug.Log("<----- HerdDataManager Created ----->");
-            LoadHerdData();
 
             SubsribeToEvents();
         }
@@ -43,16 +41,17 @@ namespace Assets.Scripts.Infrastructure
             UserDataProvider.Instance.Get.HerdModel.DataChange += OnDataBalanceChange;
         }
 
-        private static async UniTask SetHerdModel()
+        private static async UniTask GetHerdFromServer()
         {
-            if (UserDataProvider.Instance.Get.DataVersion < _serverDataVersion)
+            if (!UserSessionManager.Instance.IsOffileMod && UserDataProvider.Instance.Get.DataVersion < _serverDataVersion)
             {
-                var herdModel = await NetworkManager.GetHerd(Guid.Parse(UserDataProvider.Instance.Get.HerdId));
-                var allMales = await GetMaleSheeps(herdModel.herdSheeps);
-                var allFemales = await GetFemaleSheeps(herdModel.herdSheeps);
+                var herdResponse = await NetworkManager.GetHerd(Guid.Parse(UserDataProvider.Instance.Get.HerdId));
+                var allMales = await GetMaleSheeps(herdResponse.herdSheeps);
+                var allFemales = await GetFemaleSheeps(herdResponse.herdSheeps);
 
-                UserDataProvider.Instance.Get.HerdModel.InitializeHerdData(herdModel.herdId, herdModel.herdName,
-                                                                 herdModel.herdSheeps, await SetMatches(allMales, allFemales));
+                UserDataProvider.Instance.Get.HerdModel.InitializeHerdData(herdResponse.herdId, herdResponse.herdName,
+                                                                 herdResponse.herdSheeps, await SetMatches(allMales, allFemales),
+                                                                 herdResponse.vaccines);
 
                 SaveHerdData();
             }
@@ -65,8 +64,38 @@ namespace Assets.Scripts.Infrastructure
             var allFemales = await GetFemaleSheeps(herdModel.Sheeps);
 
             UserDataProvider.Instance.Get.HerdModel.InitializeHerdData(herdModel.HerdId, herdModel.HerdName,
-                                                 herdModel.Sheeps, await SetMatches(allMales, allFemales));
+                                                 herdModel.Sheeps, await SetMatches(allMales, allFemales), herdModel.Vaccines);
             SaveHerdData();
+        }
+
+        private static void SaveUserData()
+        {
+            switch (UserDataProvider.Instance.Get.ModelSaveName)
+            {
+                case "Local File":
+                    _localFileStorageSystem.SaveUser(); 
+                    break;
+                case "PlayerPrefs":
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void LoadUserData()
+        {
+            switch (UserDataProvider.Instance.Get.ModelSaveName)
+            {
+                case "Local File":
+                    _localFileStorageSystem.LoadUser();
+                    break;
+                case "PlayerPrefs":
+
+                    break;
+                default:
+                    break;
+            }
         }
 
         private static void SaveHerdData()
@@ -74,7 +103,7 @@ namespace Assets.Scripts.Infrastructure
             switch (UserDataProvider.Instance.Get.ModelSaveName)
             {
                 case "Local File":
-                    _localFileStorageSystem.Save();
+                    _localFileStorageSystem.SaveHerd();
                     break;
                 case "Player Prefs":
 
@@ -89,7 +118,7 @@ namespace Assets.Scripts.Infrastructure
             switch (UserDataProvider.Instance.Get.ModelSaveName)
             {
                 case "Local File":
-                    _localFileStorageSystem.Load();
+                    _localFileStorageSystem.LoadHerd();
                     break;
                 case "Player Prefs":
 
@@ -123,12 +152,14 @@ namespace Assets.Scripts.Infrastructure
             {
                 var sheepResponseList = new List<SheepResponse>();
                 var herdMatches = new List<MatchResponse>();
+                var vaccineResponseList = new List<VaccineResponse>();
                 UserDataProvider.Instance.Get.HerdModel.InitializeHerdData
                     (
                         newHerdResponse.herdId,
                         newHerdResponse.herdName,
                         sheepResponseList,
-                        herdMatches
+                        herdMatches,
+                        vaccineResponseList
                     );
                 UserDataProvider.Instance.Get.SetHerdId(newHerdResponse.herdId);
             }
@@ -143,6 +174,7 @@ namespace Assets.Scripts.Infrastructure
                 {
                     UserDataProvider.Instance.Get.InitializeUserData(registerResponse.userId, registerResponse.personName,
                                                                  registerResponse.email, registerResponse.herdId);
+                    SaveUserData();
                     return true;
                 }
             }
@@ -159,14 +191,24 @@ namespace Assets.Scripts.Infrastructure
         {
             try
             {
-                var loginResponse = await NetworkManager.Login(loginRequest);
-                if (loginResponse is not null)
+                if (UserSessionManager.Instance.HasInternetConnection)
                 {
-                    UserDataProvider.Instance.Get.InitializeUserData(loginResponse.userId, loginResponse.personName,
-                                                                     loginResponse.email, loginResponse.herdId);
-
-                    return true;
+                    var loginResponse = await NetworkManager.Login(loginRequest);
+                    if (loginResponse is not null)
+                    {
+                        UserDataProvider.Instance.Get.InitializeUserData(loginResponse.userId, loginResponse.personName,
+                                                                         loginResponse.email, loginResponse.herdId);
+                        await GetHerdFromServer();
+                        LoadUserData();
+                        LoadHerdData();
+                        return true;
+                    }
                 }
+                else
+                {
+                    Debug.LogWarning("Please check your WIFI connection");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -175,6 +217,11 @@ namespace Assets.Scripts.Infrastructure
             }
 
             return false;
+        }
+
+        public static async UniTask<bool> LogoutRequestToServer()
+        {
+            return await NetworkManager.Logout();
         }
 
         public static async UniTask UpdateHerdToServer()

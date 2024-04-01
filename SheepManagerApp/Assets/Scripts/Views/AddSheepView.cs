@@ -3,6 +3,7 @@ using Assets.Scripts.Infrastructure;
 using Assets.Scripts.Infrastructure.Providers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AddSheepView : MonoBehaviour
 {
@@ -36,13 +37,21 @@ public class AddSheepView : MonoBehaviour
     private TMP_InputField _motherTagNumber;
 
     [SerializeField]
-    private TMP_InputField _pregnant;
+    private Toggle _pregnantCheckMarkBtn;
 
     [SerializeField]
-    private TMP_InputField _isDead;
+    private Toggle _deadCheckMarkBtn;
 
     [SerializeField]
-    private TMP_InputField _sold;
+    private Toggle _soldCheckMarkBtn;
+
+    #endregion
+
+    #region Fields
+
+    private bool _isDead;
+    private bool _isSold;
+    private bool _isPregnant;
 
     #endregion
 
@@ -60,6 +69,42 @@ public class AddSheepView : MonoBehaviour
         SectionHandler.LoadSection(SceneNameProvider.GetHerdScreenName);
     }
 
+    public void OnIsPregnantCheckMarkClick()
+    {
+        if (_pregnantCheckMarkBtn.isOn)
+        {
+            _isPregnant = true;
+        }
+        else
+        {
+            _isPregnant = false;
+        }
+    }
+
+    public void OnIsDeadCheckMarkClick()
+    {
+        if (_deadCheckMarkBtn.isOn)
+        {
+            _isDead = true;
+        }
+        else
+        {
+            _isDead = false;
+        }
+    }
+
+    public void OnIsSoldCheckMarkClick()
+    {
+        if (_soldCheckMarkBtn.isOn)
+        {
+            _isSold = true;
+        }
+        else
+        {
+            _isSold = false;
+        }
+    }
+
     private SheepAddRequest SetSheepAddRequest()
     {
         return new SheepAddRequest()
@@ -73,9 +118,9 @@ public class AddSheepView : MonoBehaviour
             birthdate = _birthDate.text.Trim(),
             motherTagNumber = int.Parse(_motherTagNumber.text),
             fatherTagNumber = int.Parse(_fatherTagNumber.text),
-            isDead = bool.Parse(_isDead.text.Trim()),
-            isSold = bool.Parse(_sold.text.Trim()),
-            isPregnant = bool.Parse(_pregnant.text.Trim())
+            isDead = _isDead,
+            isSold = _isSold,
+            isPregnant = _isPregnant
         };
     }
 
